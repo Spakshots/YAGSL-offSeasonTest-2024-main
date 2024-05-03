@@ -6,7 +6,6 @@ package frc.robot.subsystems.swervedrive;
 
 import frc.robot.Constants.AutonConstants;
 import frc.robot.Constants.VisionConstants;
-import frc.robot.subsystems.Vision;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathPlannerAuto;
@@ -27,7 +26,6 @@ import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Config;
@@ -540,7 +538,7 @@ public class SwerveSubsystem extends SubsystemBase
 
 
 
-   public Pose2d get2dPose() {
+  public Pose2d get2dPose() {
     var result = camera.getLatestResult();
     if (result.hasTargets()) {
         PhotonTrackedTarget target = result.getBestTarget();
@@ -551,12 +549,12 @@ public class SwerveSubsystem extends SubsystemBase
         return(cameraRobotPose2d);
     } else { 
         return null;
-     }
     }
+  }
 
   public void addRealVisionReading(){
     if (get2dPose() != null) {
-      swerveDrive.addVisionMeasurement(get2dPose(), Timer.getFPGATimestamp());
-    }
+      swerveDrive.swerveDrivePoseEstimator.addVisionMeasurement(get2dPose(), camera.getLatestResult().getTimestampSeconds());
+    } // for time param try Timer.getFPGATimestamp()
   }
 }
